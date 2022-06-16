@@ -7,8 +7,8 @@
 
 #include "mongoose.h"
 
-#include "ResourceLimits.h"
-#include "ShaderLang.h"
+#include <glslang/Include/ResourceLimits.h>
+#include <glslang/Public/ShaderLang.h>
 
 #include <cstdint>
 #include <experimental/filesystem>
@@ -73,7 +73,7 @@ json get_diagnostics(std::string uri, std::string content,
     glslang::InitializeProcess();
     glslang::TShader shader(lang);
     shader.setStrings(&shader_cstring, 1);
-    TBuiltInResource Resources = glslang::DefaultTBuiltInResource;
+    TBuiltInResource Resources;
     EShMessages messages = EShMsgCascadingErrors;
     shader.parse(&Resources, 110, false, messages);
     std::string debug_log = shader.getInfoLog();
@@ -351,7 +351,7 @@ int main(int argc, char* argv[])
     auto stdin_option = app.add_flag("--stdin", use_stdin, "Don't launch an HTTP server and instead accept input on stdin");
     app.add_flag("-v,--verbose", verbose, "Enable verbose logging");
     app.add_option("-l,--log", logfile, "Log file");
-    app.add_option("-p,--port", port, "Port", true)->excludes(stdin_option);
+    app.add_option("-p,--port", port, "Port")->excludes(stdin_option);
 
     try {
         app.parse(argc, argv);
